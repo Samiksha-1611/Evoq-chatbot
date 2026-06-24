@@ -27,40 +27,43 @@ EVOQ is a modern AI-powered chatbot with document processing, image recognition,
 ```bash
 git clone https://github.com/YOUR_USERNAME/evoq-chatbot.git
 cd evoq-chatbot
+
 2. Install dependencies
 npm install
 
-Create a .env file
+3.Create a .env file
 .env
 GROQ_API_KEY=your_groq_api_key_here
 
-Start the server
+4.Start the server
 node server.js
 Open http://localhost:3000
 
-How It Works
-Text Chat: Send messages → Groq Llama 3.3 70B processes → AI responds
+🎯 How It Works
+Feature	Process
+Text Chat	Send messages → Groq Llama 3.3 70B processes → AI responds
+Image Upload	Upload image → Groq Llama 4 Scout analyzes → AI describes
+Document Upload	Upload PDF/Word → Text extraction → AI answers questions
+History	Conversations saved locally in your browser
 
-Image Upload: Upload image → Groq Llama 4 Scout analyzes → AI describes
+📁 Project Structure
+text
+Evog-chatbot/
+├── public/                    # Frontend files
+│   ├── index.html             # Main HTML
+│   ├── script.js              # Client-side JavaScript
+│   └── style.css              # Styling
+├── uploads/                   # Temporary file storage (auto-created)
+├── .env                       # Environment variables (NOT in repo)
+├── .gitignore                 # Git ignore rules
+├── package.json               # Dependencies
+├── package-lock.json          # Locked dependencies
+└── server.js                  # Backend server
 
-Document Upload: Upload PDF/Word → Text extraction → AI answers questions
+🔑 Environment Variables
+GROQ_API_KEY- Your Groq API key for AI services
 
-History: Conversations saved locally in your browser
-
- Project Structure
-chatbot/
-├── public/
-│   ├── index.html
-│   ├── script.js
-│   └── style.css
-├── uploads/
-├── .env
-├── package.json
-└── server.js
-
-Environment Variables
-GROQ_API_KEY-	Your Groq API key
-
-License
+📝 License
 MIT
+
 
