@@ -38,17 +38,18 @@ GROQ_API_KEY=your_groq_api_key_here
 4.Start the server
 node server.js
 Open http://localhost:3000
+```
+## 🎯 How It Works
+| Feature | Process |
+|---------|---------|
+| **Text Chat** | Send messages → Groq Llama 3.3 70B → AI responds |
+| **Image Upload** | Upload image → Groq Llama 4 Scout → AI describes |
+| **Document Upload** | Upload PDF/Word → Extract text → AI answers |
+| **History** | Conversations saved in browser's localStorage |
 
-#🎯 How It Works
-Feature	Process
-Text Chat	Send messages → Groq Llama 3.3 70B processes → AI responds
-Image Upload	Upload image → Groq Llama 4 Scout analyzes → AI describes
-Document Upload	Upload PDF/Word → Text extraction → AI answers questions
-History	Conversations saved locally in your browser
-
-#📁 Project Structure
-text
-Evog-chatbot/
+## 📁 Project Structure
+```
+Evoq-chatbot/
 ├── public/                    # Frontend files
 │   ├── index.html             # Main HTML
 │   ├── script.js              # Client-side JavaScript
@@ -59,11 +60,12 @@ Evog-chatbot/
 ├── package.json               # Dependencies
 ├── package-lock.json          # Locked dependencies
 └── server.js                  # Backend server
+```
 
-#🔑 Environment Variables
+## 🔑 Environment Variables
 GROQ_API_KEY- Your Groq API key for AI services
 
-#📝 License
+##  📝 License
 MIT
 
 
