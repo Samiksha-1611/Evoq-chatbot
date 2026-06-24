@@ -37,3 +37,30 @@ GROQ_API_KEY=your_groq_api_key_here
 Start the server
 node server.js
 Open http://localhost:3000
+
+How It Works
+Text Chat: Send messages → Groq Llama 3.3 70B processes → AI responds
+
+Image Upload: Upload image → Groq Llama 4 Scout analyzes → AI describes
+
+Document Upload: Upload PDF/Word → Text extraction → AI answers questions
+
+History: Conversations saved locally in your browser
+
+ Project Structure
+chatbot/
+├── public/
+│   ├── index.html
+│   ├── script.js
+│   └── style.css
+├── uploads/
+├── .env
+├── package.json
+└── server.js
+
+Environment Variables
+GROQ_API_KEY-	Your Groq API key
+
+License
+MIT
+
