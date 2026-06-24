@@ -39,14 +39,14 @@ GROQ_API_KEY=your_groq_api_key_here
 node server.js
 Open http://localhost:3000
 
-🎯 How It Works
+#🎯 How It Works
 Feature	Process
 Text Chat	Send messages → Groq Llama 3.3 70B processes → AI responds
 Image Upload	Upload image → Groq Llama 4 Scout analyzes → AI describes
 Document Upload	Upload PDF/Word → Text extraction → AI answers questions
 History	Conversations saved locally in your browser
 
-📁 Project Structure
+#📁 Project Structure
 text
 Evog-chatbot/
 ├── public/                    # Frontend files
@@ -60,10 +60,10 @@ Evog-chatbot/
 ├── package-lock.json          # Locked dependencies
 └── server.js                  # Backend server
 
-🔑 Environment Variables
+#🔑 Environment Variables
 GROQ_API_KEY- Your Groq API key for AI services
 
-📝 License
+#📝 License
 MIT
 
 
