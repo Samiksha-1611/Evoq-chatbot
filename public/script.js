@@ -99,8 +99,10 @@ function checkAuth() {
       showAuthScreen();
     })
     .finally(() => {
-      // Hide loading screen ONCE
-      hideLoadingScreen();
+      // Artificial delay to show off the creative loading screen
+      setTimeout(() => {
+        hideLoadingScreen();
+      }, 2000);
     });
 }
 
