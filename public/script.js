@@ -1,15 +1,62 @@
-// ============ LOADING SCREEN ============
-function hideLoadingScreen() {
-  const loadingScreen = document.getElementById('loadingScreen');
-  if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
-    loadingScreen.classList.add('hidden');
-    setTimeout(() => {
-      loadingScreen.style.display = 'none';
-    }, 600);
-    console.log('✅ Loading screen hidden');
-  }
+const loadingMessages = [
+
+  "Initializing AI Assistant...",
+
+  "Loading Neural Engine...",
+
+  "Connecting Knowledge Base...",
+
+  "Preparing Workspace...",
+
+  "Welcome to EVOQ"
+
+];
+
+function startLoading() {
+
+  const progressFill = document.getElementById("progressFill");
+
+  const progressText = document.getElementById("progressText");
+
+  const loaderMessage = document.getElementById("loaderMessage");
+
+  let progress = 0;
+
+  let messageIndex = 0;
+
+  const interval = setInterval(() => {
+
+    progress++;
+
+    progressFill.style.width = progress + "%";
+
+    progressText.innerHTML = progress + "%";
+
+    if (progress % 20 === 0 && messageIndex < loadingMessages.length - 1) {
+
+      messageIndex++;
+
+      loaderMessage.innerHTML = loadingMessages[messageIndex];
+
+    }
+
+    if (progress >= 100) {
+
+      clearInterval(interval);
+
+      setTimeout(() => {
+
+        document.getElementById("loadingScreen").classList.add("hidden");
+
+      }, 600);
+
+    }
+
+  }, 30);
+
 }
 
+window.onload = startLoading;
 // ============ AUTH STATE ============
 let currentUser = null;
 let isAuthenticated = false;
@@ -20,16 +67,30 @@ let isUploading = false;
 // ============ DOM READY ============
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🚀 EVOQ Initializing...");
-  
+  document
+
+    .getElementById("sidebarNewChat")
+
+    .addEventListener(
+
+      "click",
+
+      () => {
+
+        startNewChat();
+
+        closeHistoryModal();
+
+      });
   // Check if user is already logged in
   checkAuth();
-  
+
   // Auth form handlers
   document.getElementById("loginForm").addEventListener("submit", handleLogin);
   document.getElementById("registerForm").addEventListener("submit", handleRegister);
   document.getElementById("showRegister").addEventListener("click", showRegisterScreen);
   document.getElementById("showLogin").addEventListener("click", showLoginScreen);
-  
+
   // Chat handlers
   document.getElementById("send").addEventListener("click", sendMessage);
   document.getElementById("text").addEventListener("keydown", (e) => {
@@ -38,37 +99,56 @@ document.addEventListener("DOMContentLoaded", () => {
       sendMessage();
     }
   });
-  
+
   // New Chat button
   const newChatBtn = document.getElementById("newChatBtn");
   if (newChatBtn) {
     newChatBtn.addEventListener("click", startNewChat);
   }
-  
+
   // Logout - FIXED
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", handleLogout);
   }
-  
+
   // Attachment
   document.getElementById("attachment").addEventListener("click", () => {
     document.getElementById("fileInput").click();
   });
   document.getElementById("fileInput").addEventListener("change", handleFileSelect);
-  
+
   // History
   document.getElementById("historyButton").addEventListener("click", openHistoryModal);
-  document.querySelector(".close-history").addEventListener("click", closeHistoryModal);
-  
+  document.getElementById("closeHistory").addEventListener("click", closeHistoryModal);
+
   // Click outside modal to close
-  window.addEventListener("click", (e) => {
-    const modal = document.getElementById("historyModal");
-    if (e.target === modal) {
-      closeHistoryModal();
-    }
-  });
-  
+  document
+
+    .getElementById("sidebarOverlay")
+
+    .addEventListener(
+
+      "click",
+
+      closeHistoryModal
+
+    );
+  historyItem.innerHTML = `
+
+<strong>
+
+💬 ${conv.date}
+
+</strong>
+
+<div class="history-preview">
+
+${escapeHtml(conv.preview)}
+
+</div>
+
+`;
   console.log("✅ EVOQ initialized");
 });
 
@@ -76,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function checkAuth() {
   console.log("🔍 Checking authentication...");
-  
+
   fetch("/api/me")
     .then(res => {
       console.log("Auth response status:", res.status);
@@ -120,7 +200,7 @@ function showMainApp() {
   document.getElementById("registerScreen").style.display = "none";
   document.getElementById("appContainer").style.display = "flex";
   document.getElementById("appContainer").classList.add("active");
-  
+
   const welcome = document.getElementById("welcomeContainer");
   if (welcome) {
     welcome.classList.remove("hidden");
@@ -163,27 +243,27 @@ function showAuthError(elementId, message) {
 async function handleLogin(e) {
   e.preventDefault();
   clearAuthErrors();
-  
+
   const username = document.getElementById("loginUsername").value.trim();
   const password = document.getElementById("loginPassword").value.trim();
-  
+
   if (!username || !password) {
     showAuthError("loginError", "Please enter username and password");
     return;
   }
-  
+
   try {
     console.log("🔑 Attempting login for:", username);
-    
+
     const response = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
     });
-    
+
     const data = await response.json();
     console.log("Login response:", data);
-    
+
     if (data.success) {
       currentUser = username;
       isAuthenticated = true;
@@ -204,32 +284,32 @@ async function handleLogin(e) {
 async function handleRegister(e) {
   e.preventDefault();
   clearAuthErrors();
-  
+
   const username = document.getElementById("registerUsername").value.trim();
   const password = document.getElementById("registerPassword").value.trim();
-  
+
   if (!username || !password) {
     showAuthError("registerError", "Please enter username and password");
     return;
   }
-  
+
   if (password.length < 4) {
     showAuthError("registerError", "Password must be at least 4 characters");
     return;
   }
-  
+
   try {
     console.log("📝 Attempting registration for:", username);
-    
+
     const response = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
     });
-    
+
     const data = await response.json();
     console.log("Register response:", data);
-    
+
     if (data.success) {
       showLoginScreen(e);
       document.getElementById("loginUsername").value = username;
@@ -246,24 +326,24 @@ async function handleRegister(e) {
 // ============ LOGOUT - FIXED ============
 async function handleLogout() {
   if (!confirm("Are you sure you want to logout?")) return;
-  
+
   try {
     console.log("👋 Logging out...");
     const response = await fetch("/api/logout", { method: "POST" });
     const data = await response.json();
     console.log("Logout response:", data);
-    
+
     // Reset state
     currentUser = null;
     isAuthenticated = false;
     isFirstMessage = true;
-    
+
     // Clear chat container
     const chatContainer = document.getElementById("chatContainer");
     if (chatContainer) {
       chatContainer.innerHTML = "";
     }
-    
+
     // Show auth screen
     showAuthScreen();
     console.log("👋 Logged out successfully");
@@ -280,7 +360,7 @@ function startNewChat() {
   if (chatContainer) {
     chatContainer.innerHTML = "";
   }
-  
+
   const welcome = document.getElementById("welcomeContainer");
   if (welcome) {
     welcome.classList.remove("hidden");
@@ -295,56 +375,56 @@ function sendMessage() {
     showAuthScreen();
     return;
   }
-  
+
   const inputField = document.getElementById("text");
   const rawText = inputField.value.trim();
-  
+
   if (!rawText) return;
-  
+
   inputField.value = "";
-  
+
   if (isFirstMessage) {
     document.getElementById("welcomeContainer").classList.add("hidden");
     isFirstMessage = false;
   }
-  
+
   appendMessage("user", rawText);
   showTypingIndicator();
-  
+
   fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message: rawText })
   })
-  .then(res => res.json())
-  .then(data => {
-    removeTypingIndicator();
-    if (data.response) {
-      appendMessage("EVOQ", data.response);
-      saveConversation();
-    } else {
-      appendMessage("EVOQ", "Sorry, I couldn't generate a response.");
-    }
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    removeTypingIndicator();
-    appendMessage("EVOQ", "Failed to connect to server.");
-  });
+    .then(res => res.json())
+    .then(data => {
+      removeTypingIndicator();
+      if (data.response) {
+        appendMessage("EVOQ", data.response);
+        saveConversation();
+      } else {
+        appendMessage("EVOQ", "Sorry, I couldn't generate a response.");
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      removeTypingIndicator();
+      appendMessage("EVOQ", "Failed to connect to server.");
+    });
 }
 
 // ============ APPEND MESSAGE ============
 function appendMessage(sender, message, id = null) {
   const chatContainer = document.getElementById("chatContainer");
   if (!chatContainer) return;
-  
+
   const avatar = sender === "user" ? "👤" : "🤖";
-  
+
   const messageHtml = `<div class="message ${sender}">
     <div class="avatar">${avatar}</div>
     <div class="msg-body" ${id ? `id="${id}"` : ""}>${formatMessage(message)}</div>
   </div>`;
-  
+
   chatContainer.insertAdjacentHTML("beforeend", messageHtml);
   scrollToBottom();
 }
@@ -374,12 +454,12 @@ function showTypingIndicator() {
   removeTypingIndicator();
   const chatContainer = document.getElementById("chatContainer");
   if (!chatContainer) return;
-  
+
   const typingHtml = `<div class="message EVOQ" id="typingIndicator">
     <div class="avatar">🤖</div>
     <div class="msg-body">Thinking<span class="dots">...</span></div>
   </div>`;
-  
+
   chatContainer.insertAdjacentHTML("beforeend", typingHtml);
   scrollToBottom();
 }
@@ -393,12 +473,12 @@ function removeTypingIndicator() {
 function handleFileSelect(event) {
   const file = event.target.files[0];
   if (!file) return;
-  
+
   if (file.size > 10 * 1024 * 1024) {
     appendMessage("EVOQ", "❌ File is too large. Maximum size is 10MB");
     return;
   }
-  
+
   currentFile = file;
   showFilePreviewInChat(file);
 }
@@ -407,7 +487,7 @@ function showFilePreviewInChat(file) {
   const fileName = file.name;
   const fileSize = (file.size / 1024).toFixed(2) + " KB";
   const fileIcon = file.type.startsWith('image/') ? '🖼️' : '📄';
-  
+
   let previewHtml = `
     <div class="message user" id="tempFileMessage">
       <div class="avatar">👤</div>
@@ -427,14 +507,14 @@ function showFilePreviewInChat(file) {
       </div>
     </div>
   `;
-  
+
   const chatContainer = document.getElementById("chatContainer");
   chatContainer.insertAdjacentHTML("beforeend", previewHtml);
   scrollToBottom();
-  
+
   const questionInput = document.getElementById("fileQuestion");
   if (questionInput) {
-    questionInput.addEventListener("keydown", function(e) {
+    questionInput.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
         e.preventDefault();
         sendFileWithQuestion();
@@ -446,34 +526,34 @@ function showFilePreviewInChat(file) {
 
 async function sendFileWithQuestion() {
   if (isUploading || !currentFile) return;
-  
+
   const questionInput = document.getElementById("fileQuestion");
   const question = questionInput ? questionInput.value.trim() : "";
-  
+
   const tempMessage = document.getElementById("tempFileMessage");
   if (tempMessage) tempMessage.remove();
-  
-  const userMessage = question ? 
-    `📎 **${currentFile.name}**\n\n❓ ${question}` : 
+
+  const userMessage = question ?
+    `📎 **${currentFile.name}**\n\n❓ ${question}` :
     `📎 **${currentFile.name}**`;
-  
+
   appendMessage("user", userMessage);
   showTypingIndicator();
   isUploading = true;
-  
+
   const formData = new FormData();
   formData.append("file", currentFile);
   formData.append("question", question);
-  
+
   try {
     const response = await fetch("/api/upload", {
       method: "POST",
       body: formData
     });
-    
+
     const data = await response.json();
     removeTypingIndicator();
-    
+
     if (data.response) {
       appendMessage("EVOQ", data.response);
       saveConversation();
@@ -500,10 +580,10 @@ function cancelFileUpload() {
 function saveConversation() {
   const chatContainer = document.getElementById("chatContainer");
   if (!chatContainer) return;
-  
+
   const messageElements = chatContainer.querySelectorAll(".message");
   if (messageElements.length === 0) return;
-  
+
   const messages = [];
   messageElements.forEach(msg => {
     const sender = msg.classList.contains("user") ? "user" : "EVOQ";
@@ -515,7 +595,7 @@ function saveConversation() {
       });
     }
   });
-  
+
   if (messages.length > 0) {
     const conversation = {
       id: Date.now(),
@@ -523,7 +603,7 @@ function saveConversation() {
       messages: messages,
       preview: messages[0]?.text.substring(0, 50) || "Empty"
     };
-    
+
     let histories = localStorage.getItem("chatHistories");
     histories = histories ? JSON.parse(histories) : [];
     histories.unshift(conversation);
@@ -533,34 +613,51 @@ function saveConversation() {
 }
 
 function openHistoryModal() {
-  const modal = document.getElementById("historyModal");
-  if (modal) {
-    loadHistoryList();
-    modal.classList.add("show");
-    modal.style.display = "flex";
-  }
+
+  loadHistoryList();
+
+  document
+
+    .getElementById("historySidebar")
+
+    .classList.add("show");
+
+  document
+
+    .getElementById("sidebarOverlay")
+
+    .classList.add("show");
+
 }
 
 function closeHistoryModal() {
-  const modal = document.getElementById("historyModal");
-  if (modal) {
-    modal.classList.remove("show");
-    modal.style.display = "none";
-  }
+
+  document
+
+    .getElementById("historySidebar")
+
+    .classList.remove("show");
+
+  document
+
+    .getElementById("sidebarOverlay")
+
+    .classList.remove("show");
+
 }
 
 function loadHistoryList() {
   const historyList = document.getElementById("historyList");
   if (!historyList) return;
-  
+
   let histories = localStorage.getItem("chatHistories");
   histories = histories ? JSON.parse(histories) : [];
-  
+
   if (histories.length === 0) {
     historyList.innerHTML = '<div class="history-empty">No conversation history yet. Start chatting!</div>';
     return;
   }
-  
+
   historyList.innerHTML = "";
   histories.forEach(conv => {
     const historyItem = document.createElement("div");
@@ -577,13 +674,13 @@ function loadHistoryList() {
 function loadConversation(conversationId) {
   let histories = localStorage.getItem("chatHistories");
   histories = histories ? JSON.parse(histories) : [];
-  
+
   const conversation = histories.find(h => h.id === conversationId);
   if (!conversation) return;
-  
+
   const chatContainer = document.getElementById("chatContainer");
   chatContainer.innerHTML = "";
-  
+
   conversation.messages.forEach(msg => {
     const avatar = msg.sender === "user" ? "👤" : "🤖";
     const messageHtml = `<div class="message ${msg.sender}">
@@ -592,12 +689,12 @@ function loadConversation(conversationId) {
     </div>`;
     chatContainer.insertAdjacentHTML("beforeend", messageHtml);
   });
-  
+
   if (conversation.messages.length > 0) {
     document.getElementById("welcomeContainer").classList.add("hidden");
     isFirstMessage = false;
   }
-  
+
   scrollToBottom();
   closeHistoryModal();
 }
