@@ -1,191 +1,331 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EVOQ</title>
-  <link rel="icon" href="https://i.ibb.co/F57MGN0/ai-1.png" type="image/png">
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+  <title>EVOQ — Your Intelligent Thinking Companion</title>
+  <meta name="description" content="EVOQ is a premium AI assistant that helps you think, create, and build. Your intelligent thinking companion.">
+  <link rel="icon" href="evoq-logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-
 <body>
+  <!-- ============ AMBIENT BACKGROUND ============ -->
+  <div id="quantum-canvas">
+    <canvas id="particleCanvas"></canvas>
+    <div class="ambient-glow ambient-glow-1"></div>
+    <div class="ambient-glow ambient-glow-2"></div>
+    <div class="ambient-glow ambient-glow-3"></div>
+    <div class="noise-overlay"></div>
+  </div>
+
   <!-- ============ LOADING SCREEN ============ -->
   <div id="loadingScreen">
-
     <div class="loader-wrapper">
-
-      <img src="https://i.ibb.co/F57MGN0/ai-1.png" class="loader-logo">
-
-      <h1 class="loader-title">EVOQ</h1>
-
-      <div class="loader-dot"></div>
-
-      <p id="loaderMessage">
-        Initializing AI Assistant...
-      </p>
-
-      <div class="progress-bar">
-
-        <div id="progressFill"></div>
-
+      <div class="loader-orb-container">
+        <div class="loader-orb">
+          <div class="loader-orb-inner"></div>
+          <div class="loader-orb-ring"></div>
+          <div class="loader-orb-ring loader-orb-ring-2"></div>
+        </div>
       </div>
-
-      <span id="progressText">
-        0%
-      </span>
-
+      <img src="evoq-logo.png" alt="EVOQ" class="loader-logo-img">
+      <p class="loader-tagline">Engage. Evolve. Empower.</p>
+      <div class="loader-progress">
+        <div class="loader-progress-track">
+          <div id="progressFill" class="loader-progress-fill"></div>
+        </div>
+        <span id="progressText" class="loader-progress-text">0%</span>
+      </div>
+      <p id="loaderMessage" class="loader-message">Initializing AI Assistant...</p>
     </div>
-
   </div>
-  <!-- ============ AUTH SCREENS ============ -->
 
-  <!-- Login Screen -->
-  <div id="loginScreen" class="auth-screen">
-    <div class="auth-container">
+  <!-- ============ LANDING SCREEN ============ -->
+  <div id="landingScreen" class="landing-screen" style="display:none;">
+    <nav class="landing-nav">
+      <div class="landing-logo">
+        <img src="evoq-logo.png" alt="EVOQ" class="logo-img">
+      </div>
+      <div class="landing-links">
+        <a href="#" class="active">Home</a>
+        <a href="#">Features</a>
+        <a href="#">Pricing</a>
+        <a href="#">Docs</a>
+        <a href="#">About</a>
+      </div>
+      <button class="landing-cta" id="landingGetStartedBtn">Get Started <i class="fas fa-arrow-right"></i></button>
+    </nav>
+    <div class="landing-hero">
+      <div class="hero-orb">
+        <div class="hero-orb-core"></div>
+        <div class="hero-orb-glow"></div>
+        <div class="hero-orb-ring"></div>
+        <div class="hero-orb-ring hero-orb-ring-2"></div>
+        <div class="hero-orb-particles">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="hero-badge">NEXT GENERATION AI PLATFORM</div>
+      <h1 class="hero-title">
+        <span class="hero-title-line hero-title-line-1">Your AI Assistant</span>
+        <span class="hero-title-line hero-title-line-2">for <span class="hero-gradient">Everything.</span></span>
+      </h1>
+      <p class="hero-subtitle">Smart. Fast. Private.<br><span class="hero-subtitle-dim">Built to understand you better.</span></p>
+      <div class="hero-actions">
+        <button class="btn-primary" id="landingGetStartedBtn2">Get Started <i class="fas fa-arrow-right"></i></button>
+        <button class="btn-ghost">Learn More</button>
+      </div>
+    </div>
+    <div class="landing-stats">
+      <div class="stat-card"><span class="stat-value">50K+</span><span class="stat-label">Active Users</span></div>
+      <div class="stat-card"><span class="stat-value">99.9%</span><span class="stat-label">Accuracy</span></div>
+      <div class="stat-card"><span class="stat-value">120+</span><span class="stat-label">Countries</span></div>
+      <div class="stat-card"><span class="stat-value">99.99%</span><span class="stat-label">Uptime</span></div>
+    </div>
+  </div>
+
+  <!-- ============ LOGIN SCREEN ============ -->
+  <div id="loginScreen" class="auth-screen" style="display:none;">
+    <div class="auth-card">
+      <div class="auth-brand"><img src="evoq-logo.png" alt="EVOQ" class="logo-img logo-img-sm"></div>
       <div class="auth-header">
-        <img src="https://i.ibb.co/F57MGN0/ai-1.png" alt="EVOQ" class="auth-logo">
-        <h1>Welcome Back</h1>
+        <h1>Welcome back</h1>
         <p>Sign in to continue</p>
       </div>
-
       <form id="loginForm" class="auth-form">
-        <div class="form-group">
-          <label for="loginUsername">Username</label>
-          <input type="text" id="loginUsername" placeholder="Enter username" required>
+        <div class="form-field">
+          <label for="loginUsername"><i class="far fa-envelope"></i> Email address</label>
+          <input type="text" id="loginUsername" placeholder="Enter your email" required>
         </div>
-        <div class="form-group">
-          <label for="loginPassword">Password</label>
-          <input type="password" id="loginPassword" placeholder="Enter password" required>
+        <div class="form-field">
+          <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+          <div class="password-wrap">
+            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)"><i class="fas fa-eye"></i></button>
+          </div>
         </div>
-        <button type="submit" class="auth-btn">Sign In</button>
-        <p class="auth-switch">
-          Don't have an account? <a href="#" id="showRegister">Register</a>
-        </p>
+        <div class="form-options">
+          <label class="checkbox-label"><input type="checkbox" checked> <span>Remember me</span></label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn-primary btn-full">Sign In</button>
         <div id="loginError" class="auth-error"></div>
+        <p class="auth-switch">Don't have an account? <a href="#" id="showRegister">Sign up</a></p>
       </form>
+      <div class="auth-divider"><span>or continue with</span></div>
+      <div class="social-row">
+        <button class="social-btn"><i class="fab fa-google"></i></button>
+        <button class="social-btn"><i class="fab fa-github"></i></button>
+        <button class="social-btn"><i class="fab fa-microsoft"></i></button>
+      </div>
     </div>
   </div>
 
-  <!-- Register Screen -->
+  <!-- ============ REGISTER SCREEN ============ -->
   <div id="registerScreen" class="auth-screen" style="display:none;">
-    <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-brand"><img src="evoq-logo.png" alt="EVOQ" class="logo-img logo-img-sm"></div>
       <div class="auth-header">
-        <img src="https://i.ibb.co/F57MGN0/ai-1.png" alt="EVOQ" class="auth-logo">
-        <h1>Create Account</h1>
-        <p>Start your journey with EVOQ</p>
+        <h1>Create account</h1>
+        <p>Join EVOQ today</p>
       </div>
-
       <form id="registerForm" class="auth-form">
-        <div class="form-group">
-          <label for="registerUsername">Username</label>
+        <div class="form-field">
+          <label for="registerUsername"><i class="far fa-envelope"></i> Email address</label>
           <input type="text" id="registerUsername" placeholder="Choose a username" required>
         </div>
-        <div class="form-group">
-          <label for="registerPassword">Password</label>
-          <input type="password" id="registerPassword" placeholder="Create a password" required>
+        <div class="form-field">
+          <label for="registerPassword"><i class="fas fa-lock"></i> Password</label>
+          <div class="password-wrap">
+            <input type="password" id="registerPassword" placeholder="Create a password" required>
+            <button type="button" class="password-toggle" onclick="togglePassword('registerPassword', this)"><i class="fas fa-eye"></i></button>
+          </div>
         </div>
-        <button type="submit" class="auth-btn">Create Account</button>
-        <p class="auth-switch">
-          Already have an account? <a href="#" id="showLogin">Sign In</a>
-        </p>
+        <button type="submit" class="btn-primary btn-full">Create Account</button>
         <div id="registerError" class="auth-error"></div>
+        <p class="auth-switch">Already have an account? <a href="#" id="showLogin">Sign In</a></p>
       </form>
     </div>
   </div>
 
-  <!-- ============ MAIN APP (Hidden until logged in) ============ -->
+  <!-- ============ MAIN APP ============ -->
   <div id="appContainer" style="display:none;">
-
-    <!-- Header -->
-    <div class="header">
-      <div class="header-left">
-        <img src="https://i.ibb.co/F57MGN0/ai-1.png" alt="EVOQ" class="header-logo">
-        <h1>EVOQ</h1>
-      </div>
-      <div class="header-right">
-        <button id="newChatBtn" class="header-btn">
-          <i class="fas fa-plus"></i> <span>New</span>
-        </button>
-        <button id="historyButton" class="header-btn" title="History">
-          <i class="fas fa-history"></i>
-        </button>
-        <span id="userDisplay" class="user-badge">
-          <i class="fas fa-user"></i> <span id="usernameDisplay">User</span>
-        </span>
-        <button id="logoutBtn" class="header-btn logout-btn" title="Logout">
-          <i class="fas fa-sign-out-alt"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Chat Container -->
-    <div id="chatContainer" class="chat-container"></div>
-
-    <!-- Welcome Container -->
-    <div id="welcomeContainer" class="welcome-container">
-      <div class="welcome-card">
-        <div class="welcome-icon">
-          <img src="https://i.ibb.co/F57MGN0/ai-1.png" alt="EVOQ" class="welcome-logo">
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="leftSidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-header">
+          <div class="sidebar-brand"><img src="evoq-logo.png" alt="EVOQ" class="logo-img logo-img-xs"></div>
         </div>
-        <h1 class="welcome-title">Hi, I'm EVOQ</h1>
-        <p class="welcome-subtitle">Your intelligent AI assistant. How can I help you today?</p>
+        <button id="newChatBtn" class="sidebar-new-btn"><i class="fas fa-plus"></i> New Chat</button>
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-link"><i class="fas fa-home"></i><span>Home</span></a>
+          <a href="#" class="nav-link active"><i class="fas fa-comment-dots"></i><span>Chat</span></a>
+          <a href="#" class="nav-link" id="historyButton"><i class="fas fa-history"></i><span>History</span></a>
+          <a href="#" class="nav-link"><i class="fas fa-folder"></i><span>Documents</span></a>
+          <a href="#" class="nav-link"><i class="fas fa-project-diagram"></i><span>Projects</span></a>
+          <a href="#" class="nav-link" id="settingsBtn"><i class="fas fa-cog"></i><span>Settings</span></a>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="sidebar-profile">
+            <div class="profile-avatar"><i class="fas fa-user"></i></div>
+            <div class="profile-info">
+              <span id="usernameDisplay" class="profile-name">User</span>
+              <span class="profile-plan">Pro Plan</span>
+            </div>
+            <button id="logoutBtn" class="profile-menu" title="Logout"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-panel">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+          <div class="topbar-title">
+            <span class="topbar-dot"></span>
+            New Chat
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="topbar-icon" title="Bookmarks"><i class="far fa-bookmark"></i></button>
+          <button class="topbar-icon" title="More"><i class="fas fa-ellipsis-h"></i></button>
+        </div>
+      </header>
+
+      <!-- Welcome / Hero Section -->
+      <div id="welcomeContainer" class="welcome-section">
+        <div class="welcome-inner">
+          <div class="welcome-orb">
+            <div class="welcome-orb-core"></div>
+            <div class="welcome-orb-glow"></div>
+            <div class="welcome-orb-ring"></div>
+          </div>
+          <h1 class="welcome-heading">Welcome back.</h1>
+          <p class="welcome-sub">What would you like to create today?</p>
+          <div class="suggestion-grid">
+            <button class="suggestion-card" onclick="useSuggestion('Generate creative ideas for my project')">
+              <span class="suggestion-icon">💡</span>
+              <span class="suggestion-label">Generate Ideas</span>
+            </button>
+            <button class="suggestion-card" onclick="useSuggestion('Summarize this PDF document for me')">
+              <span class="suggestion-icon">📄</span>
+              <span class="suggestion-label">Summarize PDF</span>
+            </button>
+            <button class="suggestion-card" onclick="useSuggestion('Write clean, efficient code for')">
+              <span class="suggestion-icon">💻</span>
+              <span class="suggestion-label">Write Code</span>
+            </button>
+            <button class="suggestion-card" onclick="useSuggestion('Help me prepare for a technical interview')">
+              <span class="suggestion-icon">🎯</span>
+              <span class="suggestion-label">Interview Prep</span>
+            </button>
+            <button class="suggestion-card" onclick="useSuggestion('Do deep research on')">
+              <span class="suggestion-icon">🧠</span>
+              <span class="suggestion-label">Deep Research</span>
+            </button>
+            <button class="suggestion-card" onclick="useSuggestion('Help me build a project from scratch')">
+              <span class="suggestion-icon">🚀</span>
+              <span class="suggestion-label">Build a Project</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Area -->
+      <div id="chatContainer" class="chat-area"></div>
+
+      <!-- Floating Composer -->
+      <div class="composer-wrapper">
+        <div class="composer" id="composerBox">
+          <div class="composer-inner">
+            <input type="text" id="text" placeholder="Ask EVOQ anything..." autocomplete="off" required>
+            <div class="composer-actions">
+              <button id="attachment" class="composer-btn" title="Attach file"><i class="fas fa-plus"></i></button>
+              <div class="voice-controls">
+                <button onclick="speakText()" class="composer-btn" title="Read aloud"><i class="fas fa-volume-up"></i></button>
+                <button id="pauseResumeBtn" onclick="togglePauseResume()" class="composer-btn" style="display:none;" title="Pause/Resume"><i class="fas fa-pause"></i></button>
+                <button onclick="cancelSpeech()" class="composer-btn" style="display:none;" title="Stop"><i class="fas fa-stop"></i></button>
+              </div>
+              <button id="send" title="Send message" class="composer-send"><i class="fas fa-arrow-up"></i></button>
+            </div>
+          </div>
+          <input type="file" id="fileInput" style="display: none;" accept="image/*,.pdf,.doc,.docx,.txt">
+        </div>
+      </div>
+    </main>
+
+    <!-- History Sidebar -->
+    <div id="historySidebar" class="history-panel">
+      <div class="history-panel-inner">
+        <div class="history-header">
+          <h3>History</h3>
+          <button id="closeHistory"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="historyList" class="history-list"></div>
       </div>
     </div>
-    <!-- History Modal -->
-    <div id="historySidebar" class="history-sidebar">
-
-      <div class="history-header">
-
-        <h2>
-          <i class="fas fa-comments"></i>
-          History
-        </h2>
-
-        <button id="closeHistory">
-
-          <i class="fas fa-times"></i>
-
-        </button>
-
-      </div>
-
-      <div id="historyList" class="history-list">
-      </div>
-
-      <button id="sidebarNewChat" class="sidebar-new-chat">
-
-        <i class="fas fa-plus"></i>
-
-        New Conversation
-
-      </button>
-
-    </div>
-
     <div id="sidebarOverlay"></div>
-    <!-- Footer -->
-    <div class="footer">
-      <div class="input-container">
-        <input type="text" id="text" placeholder="Ask me anything" autocomplete="off" required>
-        <button id="attachment"><i class="fas fa-paperclip"></i></button>
-        <button id="send"><i class="fas fa-location-arrow"></i></button>
+  </div>
+
+  <!-- ============ SETTINGS MODAL ============ -->
+  <div id="settingsModal" class="auth-screen" style="display:none;">
+    <div class="auth-card" style="max-width: 480px;">
+      <div class="auth-header">
+        <h1>Settings</h1>
+        <p>Manage your preferences</p>
       </div>
-      <div class="voice-controls">
-        <button onclick="speakText()"><i class="fas fa-volume-up"></i></button>
-        <button id="pauseResumeBtn" onclick="togglePauseResume()"><i class="fas fa-pause"></i></button>
-        <button onclick="cancelSpeech()"><i class="fas fa-stop"></i></button>
+      <div class="auth-form">
+        <div class="form-field">
+          <label>Theme</label>
+          <select class="form-select">
+            <option>Dark Futuristic (Default)</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>AI Model</label>
+          <select class="form-select">
+            <option>EVOQ Neural Engine</option>
+            <option>Llama 3.3 70B</option>
+          </select>
+        </div>
+        <button class="btn-primary btn-full" onclick="document.getElementById('settingsModal').style.display='none'">Save Changes</button>
       </div>
-      <input type="file" id="fileInput" style="display: none;" accept="image/*,.pdf,.doc,.docx,.txt">
     </div>
   </div>
 
-  <!-- JavaScript -->
+  <!-- ============ FILE UPLOAD MODAL ============ -->
+  <div id="fileUploadModal" class="auth-screen" style="display:none;">
+    <div class="auth-card" style="max-width: 500px;">
+      <div id="dragDropArea" class="drag-drop-zone">
+        <div class="drag-drop-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+        <p class="drag-drop-text">Drag & drop file here or click to browse</p>
+        <span class="drag-drop-hint">PDF, DOC, TXT, Images up to 10MB</span>
+      </div>
+      <div id="uploadedFileItem" class="uploaded-file" style="display: none;">
+        <div class="file-icon" id="fileUploadIcon"><i class="fas fa-file-pdf"></i></div>
+        <div class="file-meta">
+          <span class="file-name" id="fileUploadName">document.pdf</span>
+          <span class="file-size" id="fileUploadSize">1.2 MB</span>
+        </div>
+        <button class="file-remove" onclick="clearUploadModalFile()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="file-question">
+        <input type="text" id="fileUploadQuestion" placeholder="Ask something about this file...">
+      </div>
+      <div class="file-actions">
+        <button class="btn-primary btn-full" onclick="submitFileUpload()">Analyze File</button>
+        <button class="btn-ghost btn-full" onclick="closeFileUploadModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
-
 </html>
