@@ -320,16 +320,15 @@ app.post("/api/logout", (req, res) => {
 });
 
 // ============ SERVER START ============
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
   console.log("\n" + "=".repeat(50));
   console.log("✅ EVOQ Server Running!");
   console.log("=".repeat(50));
-  console.log(`📡 URL: http://localhost:3000`);
-  console.log(`🔐 Auth: Login/Register enabled`);
-  console.log(`🖼️  Images: Llama 4 Scout (FREE)`);
-  console.log(`📄 Documents: Llama 3.3 70B`);
+  console.log(`🌐 Server started on port ${PORT}`);
+  console.log("🔐 Auth: Login/Register enabled");
+  console.log("🖼️ Images: Llama 4 Scout (FREE)");
+  console.log("📄 Documents: Llama 3.3 70B");
   console.log("=".repeat(50) + "\n");
-  console.log("📝 Demo Accounts (or register new):");
-  console.log("   Username: demo | Password: demo123");
-  console.log("   Username: test | Password: test123\n");
 });
